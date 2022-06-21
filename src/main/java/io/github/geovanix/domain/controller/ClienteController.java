@@ -1,15 +1,28 @@
 package io.github.geovanix.domain.controller;
 
+import io.github.geovanix.domain.entity.Cliente;
+import io.github.geovanix.domain.repository.Clientes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    @RequestMapping(value = "/hello/{nome}", method = RequestMethod.GET)
+    @Autowired
+    private Clientes clientes;
+
+    @GetMapping("/api/cliente/{id}")
     @ResponseBody
-    public String helloCliente(@PathVariable ("nome") String nomeCliente) {
-        return String.format("Hello %s", nomeCliente);
+    public ResponseEntity getClienteById ( @PathVariable Integer id) {
+        Optional<Cliente> cliente = clientes.findById(id);
+        if (cliente.isPresent()) {
+            return ResponseEntity.ok(cliente.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
 }
