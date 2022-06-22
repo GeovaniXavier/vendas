@@ -1,7 +1,7 @@
 package io.github.geovanix.domain.controller;
 
 import io.github.geovanix.domain.entity.Cliente;
-import io.github.geovanix.domain.repository.Clientes;
+import io.github.geovanix.domain.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -22,12 +22,12 @@ Ou seja, não precisa colocar @ResponseBody em cima de cada metodo.
 public class ClienteController {
 
     @Autowired
-    private Clientes clientes;
+    private ClienteRepository clientesRepository;
 
     //BuscarPorId
     @GetMapping("{id}")
     public Cliente getClienteById(@PathVariable Integer id) {
-        return clientes.findById(id)
+        return clientesRepository.findById(id)
                        .orElseThrow(() ->
                        new ResponseStatusException(HttpStatus.NOT_FOUND,
                        "Cliente não encontrando."));
@@ -38,7 +38,7 @@ public class ClienteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente save(@RequestBody Cliente cliente) {
-        return clientes.save(cliente);
+        return clientesRepository.save(cliente);
     }
 
 
@@ -46,9 +46,9 @@ public class ClienteController {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-        clientes.findById(id)
+        clientesRepository.findById(id)
                 .map(cliente -> {
-                    clientes.delete(cliente);
+                    clientesRepository.delete(cliente);
                     return cliente;
                 })
                 .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
@@ -60,9 +60,9 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void atualizar(@PathVariable Integer id,
                                     @RequestBody Cliente cliente) {
-         clientes.findById(id).map(clienteExistente -> {
+        clientesRepository.findById(id).map(clienteExistente -> {
             cliente.setId(clienteExistente.getId());
-            clientes.save(cliente);
+            clientesRepository.save(cliente);
             return clienteExistente;
         }).orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
            "Cliente não encontrado"));
@@ -77,7 +77,7 @@ public class ClienteController {
                                     .withStringMatcher(
                                      ExampleMatcher.StringMatcher.CONTAINING);
         Example example = Example.of(filtro, matcher);
-        return clientes.findAll(example);
+        return clientesRepository.findAll(example);
 
     }
 
