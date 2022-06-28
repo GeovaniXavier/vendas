@@ -1,10 +1,12 @@
 package io.github.geovanix.domain.controller;
 
+import io.github.geovanix.domain.dto.AtualizarStatusPedidoDTO;
 import io.github.geovanix.domain.dto.InformacoesItemPedidoDto;
 import io.github.geovanix.domain.dto.InformacoesPedidoDto;
 import io.github.geovanix.domain.dto.PedidoDTO;
 import io.github.geovanix.domain.entity.ItemPedido;
 import io.github.geovanix.domain.entity.Pedido;
+import io.github.geovanix.domain.enums.StatusPedido;
 import io.github.geovanix.domain.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -17,8 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/api/pedidos/")
@@ -43,6 +44,15 @@ public class PedidoController {
                     new ResponseStatusException(NOT_FOUND, "Pedido não encontrado.")
                 );
     }
+
+    @PatchMapping("{id}")
+    @ResponseStatus(NO_CONTENT)
+    public void updateStatus(@PathVariable Integer id,
+                             @RequestBody AtualizarStatusPedidoDTO atualizarStatusPedidoDTO){
+           String novoStatus =  atualizarStatusPedidoDTO.getNovoStatus();
+           pedidoService.AtualizarStatus(id, StatusPedido.valueOf(novoStatus));
+    }
+
     private InformacoesPedidoDto converter(Pedido pedido) {
        return InformacoesPedidoDto
                 .builder()
@@ -51,6 +61,7 @@ public class PedidoController {
                 .cpf(pedido.getCliente().getCpf())
                 .nomeCliente(pedido.getCliente().getNome())
                 .total(pedido.getTotal())
+                .status(pedido.getStatus().name())
                 .items(converter(pedido.getItens()))
                 .build();
     }
@@ -67,6 +78,5 @@ public class PedidoController {
                         .build()
         ).collect(Collectors.toList());
     }
-
 
 }
