@@ -21,7 +21,7 @@ public class Cliente {
     private Integer id;
 
     @Column(name = "nome", length = 100)
-    @NotEmpty(message = "Por favor digite seu nome!")
+    @NotEmpty(message = "Nome Obrigatorio!")
     private String nome;
 
     @Column(name = "cpf", length = 11)
