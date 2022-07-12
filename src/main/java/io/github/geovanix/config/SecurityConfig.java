@@ -1,5 +1,7 @@
 package io.github.geovanix.config;
 
+import io.github.geovanix.domain.service.imp.UsuarioServiceImp;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private UsuarioServiceImp usuarioServiceImp;
+
     //Criptografa senha;
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -20,11 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //Define de onde vão vim nossos usuarios e senhas;
     @Override
     protected void configure (AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .passwordEncoder(passwordEncoder())
-                .withUser("fulano")
-                .password(passwordEncoder().encode("123"))
-                .roles("USER", "ADMIN");
+        auth.
+                userDetailsService(usuarioServiceImp)
+                .passwordEncoder(passwordEncoder());
     }
 
     //Configuração de autorização
