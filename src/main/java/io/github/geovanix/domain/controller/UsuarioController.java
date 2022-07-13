@@ -12,7 +12,6 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios/")
-@RequiredArgsConstructor
 public class UsuarioController {
 
     @Autowired
@@ -23,11 +22,10 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario salvar(@RequestBody @Valid Usuario usuario) {
+    public Usuario salvar( @RequestBody @Valid Usuario usuario ){
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(senhaCriptografada);
         return usuarioServiceImp.salvar(usuario);
-
     }
 
 }

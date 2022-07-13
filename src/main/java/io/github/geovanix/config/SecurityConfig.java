@@ -19,15 +19,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     //Criptografa senha;
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     //Define de onde vão vim nossos usuarios e senhas;
     @Override
-    protected void configure (AuthenticationManagerBuilder auth) throws Exception {
-        auth.
-                userDetailsService(usuarioServiceImp)
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(usuarioServiceImp)
                 .passwordEncoder(passwordEncoder());
     }
 
@@ -39,12 +39,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/cliente/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/pedidos/**").hasAnyRole("USER", "ADMIN")
-                .antMatchers("/api/produto/**").hasAnyRole("ADMIN")
+                .antMatchers("/api/produto/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/usuarios/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
-
-
+        ;
     }
 }

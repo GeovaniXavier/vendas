@@ -21,7 +21,7 @@ public class UsuarioServiceImp implements UserDetailsService {
     private UsuarioRepository usuarioRepository;
 
     @Transactional
-    public Usuario salvar(Usuario usuario) {
+    public Usuario salvar(Usuario usuario){
         return usuarioRepository.save(usuario);
     }
 
@@ -29,16 +29,16 @@ public class UsuarioServiceImp implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Usuario usuario = usuarioRepository.findByLogin(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario não encontrado na base de dados."));
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado na base de dados."));
 
         String[] roles = usuario.isAdmin() ?
-                new String[] {"admin", "user"} : new String[] {"USER"};
+                new String[]{"ADMIN", "USER"} : new String[]{"USER"};
 
         return User
                 .builder()
                 .username(usuario.getLogin())
                 .password(usuario.getSenha())
-                .roles()
+                .roles(roles)
                 .build();
     }
 }
