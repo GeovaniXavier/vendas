@@ -2,6 +2,7 @@ package io.github.geovanix.domain.controller;
 
 import io.github.geovanix.domain.entity.Usuario;
 import io.github.geovanix.domain.service.imp.UsuarioServiceImp;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/usuarios/")
+@RequiredArgsConstructor
 public class UsuarioController {
 
     @Autowired
